@@ -90,9 +90,11 @@ fun MyApp() {
                 TextField(
                     modifier = Modifier.width(100.dp),
                     value = text,
-                    onValueChange = {
-                        text = it
-                        time = text.text.toInt() * 1000
+                    onValueChange = { newValue ->
+                        text = newValue
+                        text.text
+                            .takeIf { it.isNotEmpty() }
+                            ?.let { time = it.toInt() * 1000 }
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
