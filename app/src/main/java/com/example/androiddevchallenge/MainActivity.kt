@@ -70,6 +70,7 @@ fun MyApp() {
     var text by remember { mutableStateOf(TextFieldValue("30")) }
     var time by remember { mutableStateOf(text.text.toInt() * 1000) }
     var running by remember { mutableStateOf(false) }
+    var controlsEnabled by remember { mutableStateOf(true) }
     val height by animateDpAsState(
         if (running) 0.dp else 300.dp,
         animationSpec = tween(
@@ -101,20 +102,24 @@ fun MyApp() {
                 )
                 Row {
                     Button(
+                        enabled = controlsEnabled,
                         modifier = Modifier.padding(18.dp),
                         onClick = {
                             running = true
+                            controlsEnabled = false
                             scope.launch {
                                 while (time > 0) {
                                     delay(1000)
                                     time -= 1000
                                 }
+                                controlsEnabled = true
                             }
                         }
                     ) {
                         Text("start")
                     }
                     Button(
+                        enabled = controlsEnabled,
                         modifier = Modifier.padding(18.dp),
                         onClick = {
                             running = false
