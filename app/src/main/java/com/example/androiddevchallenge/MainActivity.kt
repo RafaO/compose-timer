@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -41,6 +42,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.ui.theme.MyTheme
@@ -62,7 +65,8 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     val scope = rememberCoroutineScope()
-    var time by remember { mutableStateOf(300) }
+    var text by remember { mutableStateOf(TextFieldValue("300")) }
+    var time by remember { mutableStateOf(text.text.toInt()) }
     val transition = updateTransition(time)
     val indicatorHeight by transition.animateDp { it.dp }
     Surface(color = MaterialTheme.colors.background) {
@@ -74,7 +78,11 @@ fun MyApp() {
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Column {
-                TextField(value = "300", onValueChange = {})
+                TextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
                 Row {
                     Button(
                         onClick = {
