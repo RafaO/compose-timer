@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -96,6 +97,7 @@ fun MyApp() {
                 )
                 Row {
                     Button(
+                        modifier = Modifier.padding(18.dp),
                         onClick = {
                             running = true
                             scope.launch {
@@ -109,6 +111,7 @@ fun MyApp() {
                         Text("start")
                     }
                     Button(
+                        modifier = Modifier.padding(18.dp),
                         onClick = {
                             running = false
                             time = text.text.toInt() * 1000
@@ -120,7 +123,8 @@ fun MyApp() {
                 Modifier
                     .height(height)
                     .width(100.dp)
-                    .background(MaterialTheme.colors.secondary)
+                    .background(MaterialTheme.colors.secondary),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = "${time / 1000} secs")
             }
