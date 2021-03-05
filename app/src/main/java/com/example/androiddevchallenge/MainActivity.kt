@@ -21,14 +21,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,33 +66,43 @@ fun MyApp() {
     val transition = updateTransition(time)
     val indicatorHeight by transition.animateDp { it.dp }
     Surface(color = MaterialTheme.colors.background) {
-        Row(modifier = Modifier.height(500.dp), verticalAlignment = Alignment.Bottom) {
+        Row(
+            modifier = Modifier
+                .height(500.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
             Column {
-                Text(text = "$time secs")
-                Button(
-                    onClick = {
-                        scope.launch {
-                            while (time > 0) {
-                                delay(100)
-                                time -= 1
+                TextField(value = "300", onValueChange = {})
+                Row {
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                while (time > 0) {
+                                    delay(100)
+                                    time -= 1
+                                }
                             }
                         }
+                    ) {
+                        Text("start")
                     }
-                ) {
-                    Text("start")
+                    Button(
+                        onClick = {
+                            time = 300
+                        }
+                    ) { Text("reset") }
                 }
-                Button(
-                    onClick = {
-                        time = 300
-                    }
-                ) { Text("reset") }
             }
             Column(
                 Modifier
                     .height(indicatorHeight)
-                    .width(30.dp)
+                    .width(100.dp)
                     .background(Color.Cyan)
-            ) {}
+            ) {
+                Text(text = "$time secs")
+            }
         }
     }
 }
