@@ -18,8 +18,9 @@ package com.example.androiddevchallenge
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,10 +67,16 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     val scope = rememberCoroutineScope()
-    var text by remember { mutableStateOf(TextFieldValue("300")) }
-    var time by remember { mutableStateOf(text.text.toInt()) }
-    val transition = updateTransition(time)
-    val indicatorHeight by transition.animateDp { it.dp }
+    var text by remember { mutableStateOf(TextFieldValue("30")) }
+    var time by remember { mutableStateOf(text.text.toInt() * 1000) }
+    var running by remember { mutableStateOf(false) }
+    val height by animateDpAsState(
+        if (running) 0.dp else 300.dp,
+        animationSpec = tween(
+            durationMillis = if (running) time else 300,
+            easing = LinearEasing
+        )
+    )
     Surface(color = MaterialTheme.colors.background) {
         Row(
             modifier = Modifier
@@ -81,15 +89,20 @@ fun MyApp() {
                 TextField(
                     value = text,
                     onValueChange = { text = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    singleLine = true
                 )
                 Row {
                     Button(
                         onClick = {
+                            running = true
                             scope.launch {
                                 while (time > 0) {
-                                    delay(100)
-                                    time -= 1
+                                    delay(1000)
+                                    time -= 1000
                                 }
                             }
                         }
@@ -98,18 +111,19 @@ fun MyApp() {
                     }
                     Button(
                         onClick = {
-                            time = 300
+                            running = false
+                            time = text.text.toInt() * 1000
                         }
                     ) { Text("reset") }
                 }
             }
             Column(
                 Modifier
-                    .height(indicatorHeight)
+                    .height(height)
                     .width(100.dp)
                     .background(Color.Cyan)
             ) {
-                Text(text = "$time secs")
+                Text(text = "${time / 1000} secs")
             }
         }
     }
