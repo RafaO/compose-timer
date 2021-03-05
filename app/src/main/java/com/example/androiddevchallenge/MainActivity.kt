@@ -85,10 +85,14 @@ fun MyApp() {
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Column {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 TextField(
+                    modifier = Modifier.width(100.dp),
                     value = text,
-                    onValueChange = { text = it },
+                    onValueChange = {
+                        text = it
+                        time = text.text.toInt() * 1000
+                    },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
