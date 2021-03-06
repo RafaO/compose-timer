@@ -43,6 +43,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -118,7 +120,7 @@ fun MyApp() {
                             }
                         }
                     ) {
-                        Text("start")
+                        Text(stringResource(R.string.start))
                     }
                     Button(
                         enabled = controlsEnabled,
@@ -127,7 +129,7 @@ fun MyApp() {
                             running = false
                             time = text.text.toInt() * 1000
                         }
-                    ) { Text("reset") }
+                    ) { Text(stringResource(R.string.reset)) }
                 }
             }
             Column(
@@ -137,7 +139,7 @@ fun MyApp() {
                     .background(MaterialTheme.colors.secondary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "${time / 1000} secs")
+                Text(LocalContext.current.getString(R.string.time, time / 1000))
             }
         }
     }
