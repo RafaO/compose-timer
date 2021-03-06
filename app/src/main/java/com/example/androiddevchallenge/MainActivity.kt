@@ -65,12 +65,14 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+fun String.toMillis() = this.toInt() * 1000
+
 // Start building your app here!
 @Composable
 fun MyApp() {
     val scope = rememberCoroutineScope()
     var text by remember { mutableStateOf(TextFieldValue("30")) }
-    var time by remember { mutableStateOf(text.text.toInt() * 1000) }
+    var time by remember { mutableStateOf(text.text.toMillis()) }
     var running by remember { mutableStateOf(false) }
     var controlsEnabled by remember { mutableStateOf(true) }
     val height by animateDpAsState(
@@ -96,7 +98,7 @@ fun MyApp() {
                         text = newValue
                         text.text
                             .takeIf { it.isNotEmpty() }
-                            ?.let { time = it.toInt() * 1000 }
+                            ?.let { time = it.toMillis() }
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -127,7 +129,7 @@ fun MyApp() {
                         modifier = Modifier.padding(18.dp),
                         onClick = {
                             running = false
-                            time = text.text.toInt() * 1000
+                            time = text.text.toMillis()
                         }
                     ) { Text(stringResource(R.string.reset)) }
                 }
